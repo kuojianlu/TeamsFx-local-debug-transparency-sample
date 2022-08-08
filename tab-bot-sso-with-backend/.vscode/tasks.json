@@ -1,0 +1,162 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Pre Debug Check & Start All",
+            "dependsOn": [
+                "validate & install prerequisites",
+                "install npm packages",
+                "start local tunnel",
+                "prepare local environment",
+                "upload teams manifest",
+                "start services"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "prepare local environment",
+            "type": "shell",
+            "command": "exit ${input:prepare-local-environment}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "upload teams manifest",
+            "type": "shell",
+            "command": "exit ${input:upload-teams-manifest}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "start services",
+            "dependsOn": [
+                "start frontend",
+                "start backend",
+                "start bot"
+            ]
+        },
+        {
+            "label": "start frontend",
+            "type": "shell",
+            "command": "npm run dev:teamsfx",
+            "isBackground": true,
+            "options": {
+                "cwd": "${workspaceFolder}/tabs"
+            },
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^.*?\\.js$",
+                        "file": 0
+                    },
+                    {
+                        "regexp": "^\\s*Line\\s+(\\d+):(\\d+):\\s+(.*)$",
+                        "line": 1,
+                        "column": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                  "activeOnStart": true,
+                  "beginsPattern": ".*",
+                  "endsPattern": "Compiled|Failed"
+                },
+                "severity": "error"
+            }
+        },
+        {
+            "label": "start backend",
+            "type": "shell",
+            "command": "npm run dev:teamsfx",
+            "isBackground": true,
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+                "env": {
+                    "PATH": "${command:fx-extension.get-func-path}${env:PATH}"
+                }
+            },
+            "problemMatcher": {
+                "pattern": [
+                    {
+                      "regexp": "^.*$",
+                      "file": 0,
+                      "location": 1,
+                      "message": 2
+                    }
+                  ],
+                  "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*(Job host stopped|signaling restart).*$",
+                    "endsPattern": "^.*(Worker process started and initialized|Host lock lease acquired by instance ID).*$"
+                  }
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "start bot",
+            "type": "shell",
+            "command": "npm run dev:teamsfx",
+            "isBackground": true,
+            "options": {
+                "cwd": "${workspaceFolder}/bot"
+            },
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^.*$",
+                        "file": 0,
+                        "location": 1,
+                        "message": 2
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "[nodemon] starting",
+                    "endsPattern": "restify listening to|Bot/ME service listening at|[nodemon] app crashed"
+                }
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "prepare-local-environment",
+            "type": "command",
+            "command": "fx-extension.debug-task-prepare-local-environment",
+            "args": {
+                "enabledSteps": [
+                    "registerBot",
+                    "registerSSOAAD",
+                    "buildTeamsManifest",
+                ],
+                "tab": {
+                    "port": 53000,
+                    "envSavePath": "${teamsfx:workspaceFolder}/tabs/.env.teamsfx.local"
+                },
+                "azureFunctions": {
+                    "port": 9229,
+                    "envSavePath": "${teamsfx:workspaceFolder}/api/.env.teamsfx.local"
+                },
+                "bot": {
+                    "port": 3978,
+                    "envSavePath": "${teamsfx:workspaceFolder}/bot/.env.teamsfx.local",
+                    "messagingEndpoint": "${teamsfx:botEndpoint}/api/messages"
+                }
+            }
+        },
+        {
+            "id": "upload-teams-manifest",
+            "type": "command",
+            "command": "fx-extension.debug-task-upload-teams-manifest",
+            "args": {
+                "manifestZipPackage": "${teamsfx:workspaceFolder}/build/appPackage/appPackage.local.zip"
+            }
+        }
+    ]
+}

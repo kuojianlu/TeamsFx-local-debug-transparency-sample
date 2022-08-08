@@ -1,0 +1,89 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Pre Debug Check & Start All",
+            "dependsOn": [
+                "validate & install prerequisites",
+                "install npm packages",
+                "start local tunnel",
+                "prepare local environment",
+                "upload teams manifest",
+                "start services"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "prepare local environment",
+            "type": "shell",
+            "command": "exit ${input:prepare-local-environment}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "upload teams manifest",
+            "type": "shell",
+            "command": "exit ${input:upload-teams-manifest}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "start services",
+            "dependsOn": [
+                "start bot"
+            ]
+        },
+        {
+            "label": "start bot",
+            "type": "shell",
+            "command": "npm run dev:teamsfx",
+            "isBackground": true,
+            "options": {
+                "cwd": "${workspaceFolder}/bot"
+            },
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^.*$",
+                        "file": 0,
+                        "location": 1,
+                        "message": 2
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "[nodemon] starting",
+                    "endsPattern": "restify listening to|Bot/ME service listening at|[nodemon] app crashed"
+                }
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "prepare-local-environment",
+            "type": "command",
+            "command": "fx-extension.debug-task-prepare-local-environment",
+            "args": {
+                "enabledSteps": [
+                    "registerBot",
+                    "buildTeamsManifest",
+                ],
+                "bot": {
+                    "port": 3978,
+                    "envSavePath": "${teamsfx:workspaceFolder}/bot/.env.teamsfx.local",
+                    "messagingEndpoint": "${teamsfx:botEndpoint}/api/messages",
+                }
+            }
+        },
+        {
+            "id": "upload-teams-manifest",
+            "type": "command",
+            "command": "fx-extension.debug-task-upload-teams-manifest",
+            "args": {
+                "manifestZipPackage": "${teamsfx:workspaceFolder}/build/appPackage/appPackage.local.zip"
+            }
+        }
+    ]
+}

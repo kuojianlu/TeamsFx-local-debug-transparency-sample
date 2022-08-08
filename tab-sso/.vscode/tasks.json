@@ -1,0 +1,92 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Pre Debug Check & Start All",
+            "dependsOn": [
+                "validate & install prerequisites",
+                "install npm packages",
+                "prepare local environment",
+                "upload teams manifest",
+                "start services"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "prepare local environment",
+            "type": "shell",
+            "command": "exit ${input:prepare-local-environment}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "upload teams manifest",
+            "type": "shell",
+            "command": "exit ${input:upload-teams-manifest}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "start services",
+            "dependsOn": [
+                "start frontend"
+            ]
+        },
+        {
+            "label": "start frontend",
+            "type": "shell",
+            "command": "npm run dev:teamsfx",
+            "isBackground": true,
+            "options": {
+                "cwd": "${workspaceFolder}/tabs"
+            },
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^.*?\\.js$",
+                        "file": 0
+                    },
+                    {
+                        "regexp": "^\\s*Line\\s+(\\d+):(\\d+):\\s+(.*)$",
+                        "line": 1,
+                        "column": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                  "activeOnStart": true,
+                  "beginsPattern": ".*",
+                  "endsPattern": "Compiled|Failed"
+                },
+                "severity": "error"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "prepare-local-environment",
+            "type": "command",
+            "command": "fx-extension.debug-task-prepare-local-environment",
+            "args": {
+                "enabledSteps": [
+                    "registerSSOAAD",
+                    "buildTeamsManifest",
+                ],
+                "tab": {
+                    "port": 53000,
+                    "envSavePath": "${teamsfx:workspaceFolder}/tabs/.env.teamsfx.local",
+                }
+            }
+        },
+        {
+            "id": "upload-teams-manifest",
+            "type": "command",
+            "command": "fx-extension.debug-task-upload-teams-manifest",
+            "args": {
+                "manifestZipPackage": "${teamsfx:workspaceFolder}/build/appPackage/appPackage.local.zip"
+            }
+        }
+    ]
+}
