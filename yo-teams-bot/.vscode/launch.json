@@ -36,7 +36,17 @@
                 "${workspaceFolder}/dist/web/**/*.js",
                 "!**/node_modules/**"
             ]
-        }
+        },
+        {
+            "name": "Launch client new (Edge)",
+            "type": "pwa-msedge",
+            "request": "launch",
+            "url": "https://teams.microsoft.com/l/app/c9cb7eb0-17cb-11ed-a501-0b6b23fbd2b5?installAppPackage=true&webjoin=true",
+            "outFiles": [
+                "${workspaceFolder}/dist/web/**/*.js",
+                "!**/node_modules/**"
+            ]
+        },
     ],
     "compounds": [
         {
@@ -60,6 +70,19 @@
             "presentation": {
                 "group": "all",
                 "order": 2
+            },
+            "stopAll": true
+        },
+        {
+            "name": "Debug new (Edge)",
+            "configurations": [
+                "Attach to server",
+                "Launch client new (Edge)"
+            ],
+            "preLaunchTask": "Pre Debug Check & Start All",
+            "presentation": {
+                "group": "all",
+                "order": 3
             },
             "stopAll": true
         }
