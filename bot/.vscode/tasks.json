@@ -14,6 +14,52 @@
             "dependsOrder": "sequence"
         },
         {
+            "label": "validate & install prerequisites",
+            "type": "shell",
+            "command": "exit ${input:validate-and-install-prerequisites}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "install npm packages",
+            "type": "shell",
+            "command": "exit ${input:install-npm-packages}",
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "start local tunnel",
+            "type": "teamsfx",
+            "command": "start-local-tunnel",
+            "args": {
+                "configFile": "${teamsfx:workspaceFolder}/.fx/configs/ngrok.yml",
+                "binFolder": "${teamsfx:ngrokBinFolder}",
+                "reuse": false
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
+                "pattern": [
+                    {
+                        "regexp": "^.*$",
+                        "file": 0,
+                        "location": 1,
+                        "message": 2
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "tunnel session started",
+                    "endsPattern": "started tunnel|failed to reconnect session"
+                }
+            }
+        },
+        {
             "label": "prepare local environment",
             "type": "shell",
             "command": "exit ${input:prepare-local-environment}",
@@ -62,6 +108,41 @@
     ],
     "inputs": [
         {
+            // This task helps to check the prerequisite to local debug the TeamsFx projects and install the missing dependencies in an easy way. What to check and how to check can be customized in the args section.
+            "id": "validate-and-install-prerequisites",
+            "type": "command",
+            "command": "fx-extension.validate-and-install-prerequisites",
+            // The args defined below is auto generated based on the project you scaffolded, to see full list of prerequisite check/installation options, see this page: https://aka.ms/teamsfx-prerequisite.
+            "args": {
+                "enabledCheckers": [
+                    // NodeJs is used to start the project
+                    "nodejs",
+                    // Login M365 account is used for provision local resource
+                    "m365Account",
+                    // Ngrok us used to start the local tunnel
+                    "ngrokBinary",
+                    // Validate whether the ports are available
+                    "portsOccupation"
+                ],
+                "portsOccupation": {
+                    "botService": 3978,
+                    "botDebug": 9239
+                }
+            }
+        },
+        {
+            "id": "install-npm-packages",
+            "type": "command",
+            "command": "fx-extension.install-npm-packages",
+            "args": {
+                "bot": {
+                    "npmInstallArgs": "--no-audit",
+                    "cwd": "${teamsfx:workspaceFolder}/bot",
+                    "forceUpdate": false
+                }
+            }
+        },
+        {
             "id": "prepare-local-environment",
             "type": "command",
             "command": "fx-extension.debug-task-prepare-local-environment",
@@ -73,7 +154,7 @@
                 "bot": {
                     "port": 3978,
                     "envSavePath": "${teamsfx:workspaceFolder}/bot/.env.teamsfx.local",
-                    "messagingEndpoint": "${teamsfx:botEndpoint}/api/messages",
+                    "messagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
                 }
             }
         },
