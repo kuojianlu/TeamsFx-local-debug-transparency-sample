@@ -69,6 +69,9 @@
                     "beginsPattern": "tunnel session started",
                     "endsPattern": "started tunnel|failed to reconnect session"
                 }
+            },
+            "presentation": {
+                "reveal": "silent"
             }
         },
         {
