@@ -45,14 +45,10 @@
             "problemMatcher": {
                 "pattern": [
                     {
-                        "regexp": "^.*?\\.js$",
-                        "file": 0
-                    },
-                    {
-                        "regexp": "^\\s*Line\\s+(\\d+):(\\d+):\\s+(.*)$",
-                        "line": 1,
-                        "column": 2,
-                        "message": 3
+                        "regexp": "^.*$",
+                        "file": 0,
+                        "location": 1,
+                        "message": 2
                     }
                 ],
                 "background": {
@@ -60,7 +56,6 @@
                   "beginsPattern": ".*",
                   "endsPattern": "Compiled|Failed"
                 },
-                "severity": "error"
             }
         }
     ],
