@@ -1,0 +1,59 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Pre Debug Check & Start All",
+            "dependsOn": [
+                "upload teams manifest",
+                "start services"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "upload teams manifest",
+            "type": "shell",
+            "command": "exit ${input:upload-teams-manifest}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "start services",
+            "dependsOn": [
+                "start bot"
+            ]
+        },
+        {
+            "label": "start bot",
+            "type": "shell",
+            "command": "npm run dev:teamsfx", // node --inspect dist/server.js
+            "isBackground": true,
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^.*$",
+                    "file": 0,
+                    "location": 1,
+                    "message": 2,
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".*",
+                    "endsPattern": "Server running on",
+                },
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "upload-teams-manifest",
+            "type": "command",
+            "command": "fx-extension.debug-task-upload-teams-manifest",
+            "args": {
+                "manifestZipPackage": "${teamsfx:workspaceFolder}/package/bot.zip"
+            }
+        }
+    ]
+}

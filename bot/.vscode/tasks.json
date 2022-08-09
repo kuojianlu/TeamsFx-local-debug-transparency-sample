@@ -151,13 +151,17 @@
             "command": "fx-extension.debug-task-prepare-local-environment",
             "args": {
                 "enabledSteps": [
+                    // register a bot in Bot Framework Portal
                     "registerBot",
+                    // generate Teams app package according to the Teams manifest template in templates/appPackage/manifest.template.json
                     "buildTeamsManifest",
                 ],
                 "bot": {
                     "port": 3978,
+                    // the environment variables for bot service will be appended to this file
                     "envSavePath": "${teamsfx:workspaceFolder}/bot/.env.teamsfx.local",
-                    "messagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
+                    // the bot messaging endpoint will be configured to this value
+                    "messagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages"
                 }
             }
         },
@@ -166,6 +170,7 @@
             "type": "command",
             "command": "fx-extension.debug-task-upload-teams-manifest",
             "args": {
+                // a Teams app will be registered according to this file
                 "manifestZipPackage": "${teamsfx:workspaceFolder}/build/appPackage/appPackage.local.zip"
             }
         }
