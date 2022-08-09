@@ -1,0 +1,9 @@
+{
+  "generator-teams": {
+    "promptValues": {
+      "developer": "test"
+    },
+    "libraryName": "yoTeamsBot",
+    "generator-version": "4.0.1"
+  }
+}
