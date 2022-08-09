@@ -4,13 +4,13 @@
         {
             "label": "Pre Debug Check & Start All",
             "dependsOn": [
-							  "install npm packages",
+                "install npm packages",
                 "upload teams manifest",
                 "start services"
             ],
             "dependsOrder": "sequence"
         },
-				{
+        {
             "label": "install npm packages",
             "type": "shell",
             "command": "exit ${input:install-npm-packages}",
@@ -56,7 +56,7 @@
         }
     ],
     "inputs": [
-			  {
+        {
             "id": "install-npm-packages",
             "type": "command",
             "command": "fx-extension.install-npm-packages",
