@@ -6,12 +6,55 @@
             "dependsOn": [
                 "validate & install prerequisites",
                 "install npm packages",
+                "install Azure Functions binding extension",
                 "start local tunnel",
                 "prepare local environment",
                 "upload teams manifest",
                 "start services"
             ],
             "dependsOrder": "sequence"
+        },
+        {
+            "label": "validate & install prerequisites",
+            "type": "shell",
+            "command": "exit ${input:validate-and-install-prerequisites}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "install npm packages",
+            "type": "shell",
+            "command": "exit ${input:install-npm-packages}",
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "install Azure Functions binding extension",
+            "type": "shell",
+            "command": "dotnet .api/extensions.csproj -o ./api/bin --ignore-failed-sources",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+                "env": {
+                    "PATH": "${command:fx-extension.get-dotnet-path}${env:PATH}"
+                }
+            }
+        },
+        {
+            "label": "start local tunnel",
+            "type": "teamsfx",
+            "command": "start-local-tunnel",
+            "args": {
+                "configFile": "${teamsfx:workspaceFolder}/.fx/configs/ngrok.yml",
+                "binFolder": "${teamsfx:ngrokBinFolder}",
+                "reuse": false
+            },
+            "isBackground": true,
+            "problemMatcher": "$teamsfx-local-tunnel-watch",
+            "presentation": {
+                "reveal": "silent"
+            }
         },
         {
             "label": "prepare local environment",
@@ -55,9 +98,9 @@
                     }
                 ],
                 "background": {
-                  "activeOnStart": true,
-                  "beginsPattern": ".*",
-                  "endsPattern": "Compiled|Failed"
+                    "activeOnStart": true,
+                    "beginsPattern": ".*",
+                    "endsPattern": "Compiled|Failed"
                 },
                 "severity": "error"
             }
@@ -76,17 +119,17 @@
             "problemMatcher": {
                 "pattern": [
                     {
-                      "regexp": "^.*$",
-                      "file": 0,
-                      "location": 1,
-                      "message": 2
+                        "regexp": "^.*$",
+                        "file": 0,
+                        "location": 1,
+                        "message": 2
                     }
-                  ],
-                  "background": {
+                ],
+                "background": {
                     "activeOnStart": true,
                     "beginsPattern": "^.*(Job host stopped|signaling restart).*$",
                     "endsPattern": "^.*(Worker process started and initialized|Host lock lease acquired by instance ID).*$"
-                  }
+                }
             },
             "presentation": {
                 "reveal": "silent"
@@ -122,6 +165,60 @@
     ],
     "inputs": [
         {
+            // This task helps to check the prerequisite to local debug the TeamsFx projects and install the missing dependencies in an easy way. What to check and how to check can be customized in the args section.
+            "id": "validate-and-install-prerequisites",
+            "type": "command",
+            "command": "fx-extension.validate-and-install-prerequisites",
+            // The args defined below is auto generated based on the project you scaffolded, to see full list of prerequisite check/installation options, see this page: https://aka.ms/teamsfx-prerequisite.
+            "args": {
+                "enabledCheckers": [
+                    // NodeJs is used to start the project
+                    "nodejs",
+                    // Login M365 account is used for provision local resource
+                    "m365Account",
+                    // Local certificate is used to open your local HTTPS tab in your browser
+                    "localCertificate",
+                    // Azure Functions Core Tools is used to start backend service
+                    "azureFunctionsCoreTools",
+                    // Ngrok us used to start the local tunnel
+                    "ngrokBinary",
+                    // Dotnet is used to install Azure Functions binding extension
+                    "dotnet",
+                    // Validate whether the ports are available
+                    "portsOccupation"
+                ],
+                "portsOccupation": {
+                    "tab": 53000,
+                    "backendService": 9229,
+                    "backendDebug": 7071,
+                    "botService": 3978,
+                    "botDebug": 9239
+                }
+            }
+        },
+        {
+            "id": "install-npm-packages",
+            "type": "command",
+            "command": "fx-extension.install-npm-packages",
+            "args": {
+                "tab": {
+                    "npmInstallArgs": "--no-audit",
+                    "cwd": "${teamsfx:workspaceFolder}/tab",
+                    "forceUpdate": false
+                },
+                "bot": {
+                    "npmInstallArgs": "--no-audit",
+                    "cwd": "${teamsfx:workspaceFolder}/bot",
+                    "forceUpdate": false
+                },
+                "backend": {
+                    "npmInstallArgs": "--no-audit",
+                    "cwd": "${teamsfx:workspaceFolder}/api",
+                    "forceUpdate": false
+                }
+            }
+        },
+        {
             "id": "prepare-local-environment",
             "type": "command",
             "command": "fx-extension.debug-task-prepare-local-environment",
@@ -149,7 +246,7 @@
                     // the environment variables for bot service will be appended to this file
                     "envSavePath": "${teamsfx:workspaceFolder}/bot/.env.teamsfx.local",
                     // the bot messaging endpoint will be configured to this value
-                    "messagingEndpoint": "${teamsfx:botEndpoint}/api/messages"
+                    "messagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages"
                 }
             }
         },

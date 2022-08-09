@@ -13,6 +13,22 @@
             "dependsOrder": "sequence"
         },
         {
+            "label": "validate & install prerequisites",
+            "type": "shell",
+            "command": "exit ${input:validate-and-install-prerequisites}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "install npm packages",
+            "type": "shell",
+            "command": "exit ${input:install-npm-packages}",
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
             "label": "prepare local environment",
             "type": "shell",
             "command": "exit ${input:prepare-local-environment}",
@@ -52,14 +68,48 @@
                     }
                 ],
                 "background": {
-                  "activeOnStart": true,
-                  "beginsPattern": ".*",
-                  "endsPattern": "Compiled|Failed"
+                    "activeOnStart": true,
+                    "beginsPattern": ".*",
+                    "endsPattern": "Compiled|Failed"
                 },
             }
         }
     ],
     "inputs": [
+        {
+            // This task helps to check the prerequisite to local debug the TeamsFx projects and install the missing dependencies in an easy way. What to check and how to check can be customized in the args section.
+            "id": "validate-and-install-prerequisites",
+            "type": "command",
+            "command": "fx-extension.validate-and-install-prerequisites",
+            // The args defined below is auto generated based on the project you scaffolded, to see full list of prerequisite check/installation options, see this page: https://aka.ms/teamsfx-prerequisite.
+            "args": {
+                "enabledCheckers": [
+                    // NodeJs is used to start the project
+                    "nodejs",
+                    // Login M365 account is used for provision local resource
+                    "m365Account",
+                    // Local certificate is used to open your local HTTPS tab in your browser
+                    "localCertificate",
+                    // Validate whether the ports are available
+                    "portsOccupation"
+                ],
+                "portsOccupation": {
+                    "tab": 53000
+                }
+            }
+        },
+        {
+            "id": "install-npm-packages",
+            "type": "command",
+            "command": "fx-extension.install-npm-packages",
+            "args": {
+                "tab": {
+                    "npmInstallArgs": "--no-audit",
+                    "cwd": "${teamsfx:workspaceFolder}/tab",
+                    "forceUpdate": false
+                }
+            }
+        },
         {
             "id": "prepare-local-environment",
             "type": "command",
