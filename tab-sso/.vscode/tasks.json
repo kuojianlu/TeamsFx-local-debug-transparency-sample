@@ -66,11 +66,14 @@
             "command": "fx-extension.debug-task-prepare-local-environment",
             "args": {
                 "enabledSteps": [
+                    // register an AAD app for Single Sign-On according to the AAD manifest template in templates/appPackage/aad.template.json
                     "registerSSOAAD",
+                    // generate Teams app package according to the Teams manifest template in templates/appPackage/manifest.template.json
                     "buildTeamsManifest",
                 ],
                 "tab": {
                     "port": 53000,
+                    // the environment variables for tab service will be appended to this file
                     "envSavePath": "${teamsfx:workspaceFolder}/tabs/.env.teamsfx.local",
                 }
             }
@@ -80,6 +83,7 @@
             "type": "command",
             "command": "fx-extension.debug-task-upload-teams-manifest",
             "args": {
+                // a Teams app will be registered according to this file
                 "manifestZipPackage": "${teamsfx:workspaceFolder}/build/appPackage/appPackage.local.zip"
             }
         }
