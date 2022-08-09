@@ -94,14 +94,12 @@
                 "cwd": "${workspaceFolder}/tabs"
             },
             "problemMatcher": {
-                "pattern": [
-                    {
-                        "regexp": "^.*$",
-                        "file": 0,
-                        "location": 1,
-                        "message": 2
-                    }
-                ],
+                "pattern": {
+                    "regexp": "^.*$",
+                    "file": 0,
+                    "location": 1,
+                    "message": 2
+                },
                 "background": {
                     "activeOnStart": true,
                     "beginsPattern": ".*",
@@ -122,14 +120,12 @@
                 }
             },
             "problemMatcher": {
-                "pattern": [
-                    {
-                        "regexp": "^.*$",
-                        "file": 0,
-                        "location": 1,
-                        "message": 2
-                    }
-                ],
+                "pattern": {
+                    "regexp": "^.*$",
+                    "file": 0,
+                    "location": 1,
+                    "message": 2
+                },
                 "background": {
                     "activeOnStart": true,
                     "beginsPattern": "^.*(Job host stopped|signaling restart).*$",
@@ -149,14 +145,12 @@
                 "cwd": "${workspaceFolder}/bot"
             },
             "problemMatcher": {
-                "pattern": [
-                    {
-                        "regexp": "^.*$",
-                        "file": 0,
-                        "location": 1,
-                        "message": 2
-                    }
-                ],
+                "pattern": {
+                    "regexp": "^.*$",
+                    "file": 0,
+                    "location": 1,
+                    "message": 2
+                },
                 "background": {
                     "activeOnStart": true,
                     "beginsPattern": "[nodemon] starting",
