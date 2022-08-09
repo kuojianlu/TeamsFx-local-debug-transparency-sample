@@ -33,12 +33,15 @@
         {
             "label": "install Azure Functions binding extension",
             "type": "shell",
-            "command": "dotnet .api/extensions.csproj -o ./api/bin --ignore-failed-sources",
+            "command": "dotnet extensions.csproj -o ./bin --ignore-failed-sources",
             "options": {
                 "cwd": "${workspaceFolder}/api",
                 "env": {
                     "PATH": "${command:fx-extension.get-dotnet-path}${env:PATH}"
                 }
+            },
+            "presentation": {
+                "reveal": "silent"
             }
         },
         {
@@ -165,26 +168,17 @@
     ],
     "inputs": [
         {
-            // This task helps to check the prerequisite to local debug the TeamsFx projects and install the missing dependencies in an easy way. What to check and how to check can be customized in the args section.
             "id": "validate-and-install-prerequisites",
             "type": "command",
             "command": "fx-extension.validate-and-install-prerequisites",
-            // The args defined below is auto generated based on the project you scaffolded, to see full list of prerequisite check/installation options, see this page: https://aka.ms/teamsfx-prerequisite.
             "args": {
                 "enabledCheckers": [
-                    // NodeJs is used to start the project
                     "nodejs",
-                    // Login M365 account is used for provision local resource
                     "m365Account",
-                    // Local certificate is used to open your local HTTPS tab in your browser
                     "localCertificate",
-                    // Azure Functions Core Tools is used to start backend service
                     "azureFunctionsCoreTools",
-                    // Ngrok us used to start the local tunnel
                     "ngrokBinary",
-                    // Dotnet is used to install Azure Functions binding extension
                     "dotnet",
-                    // Validate whether the ports are available
                     "portsOccupation"
                 ],
                 "portsOccupation": {

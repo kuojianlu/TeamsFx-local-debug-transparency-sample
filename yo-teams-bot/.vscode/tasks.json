@@ -4,19 +4,10 @@
         {
             "label": "Pre Debug Check & Start All",
             "dependsOn": [
-                "install npm packages",
                 "upload teams manifest",
                 "start services"
             ],
             "dependsOrder": "sequence"
-        },
-        {
-            "label": "install npm packages",
-            "type": "shell",
-            "command": "exit ${input:install-npm-packages}",
-            "presentation": {
-                "reveal": "silent"
-            }
         },
         {
             "label": "upload teams manifest",
@@ -56,18 +47,6 @@
         }
     ],
     "inputs": [
-        {
-            "id": "install-npm-packages",
-            "type": "command",
-            "command": "fx-extension.install-npm-packages",
-            "args": {
-                "bot": {
-                    "npmInstallArgs": "--no-audit",
-                    "cwd": "${teamsfx:workspaceFolder}",
-                    "forceUpdate": false
-                }
-            }
-        },
         {
             "id": "upload-teams-manifest",
             "type": "command",
