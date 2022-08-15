@@ -37,7 +37,7 @@
             "command": "start-local-tunnel",
             "args": {
                 "configFile": "${teamsfx:workspaceFolder}/.fx/configs/ngrok.yml",
-                "binFolder": "${teamsfx:ngrokBinFolder}",
+                "binFolder": "${auto}",
                 "reuse": false
             },
             "isBackground": true,
@@ -131,8 +131,8 @@
                     "generateEnv", // Generate environment variables for local services
                 ],
                 "appConfigs": {
-                    "botId": "${teamsfx:botId}",
-                    "botPassword": "${teamsfx:botPassword}",
+                    "botId": "${auto}",
+                    "botPassword": "${auto}",
                     "botMessagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
                 }
             }
@@ -142,7 +142,7 @@
             "type": "command",
             "command": "fx-extension.prepare-manifest",
             "args": {
-                "manifesPackagePath": "${teamsfx:manifestPackagePath}"
+                "manifesPackagePath": "${auto}"
             }
         }
     ]

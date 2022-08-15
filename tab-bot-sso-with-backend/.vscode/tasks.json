@@ -52,7 +52,7 @@
             "command": "start-local-tunnel",
             "args": {
                 "configFile": "${teamsfx:workspaceFolder}/.fx/configs/ngrok.yml",
-                "binFolder": "${teamsfx:ngrokBinFolder}",
+                "binFolder": "${auto}",
                 "reuse": false
             },
             "isBackground": true,
@@ -220,11 +220,11 @@
                 ],
                 "appConfigs": {
                     "tabBaseUrl": "https://localhost:53000",
-                    "aadObjectId": "${teamsfx:aadObjectId}",
-                    "aadClientId": "${teamsfx:aadClientId}",
-                    "aadClientSecret": "${teamsfx:aadClientSecret}",
-                    "botId": "${teamsfx:botId}",
-                    "botPassword": "${teamsfx:botPassword}",
+                    "aadObjectId": "${auto}",
+                    "aadClientId": "${auto}",
+                    "aadClientSecret": "${auto}",
+                    "botId": "${auto}",
+                    "botPassword": "${auto}",
                     "botMessagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
                 }
             }
@@ -234,7 +234,7 @@
             "type": "command",
             "command": "fx-extension.prepare-manifest",
             "args": {
-                "manifesPackagePath": "${teamsfx:manifestPackagePath}"
+                "manifesPackagePath": "${auto}"
             }
         }
     ]

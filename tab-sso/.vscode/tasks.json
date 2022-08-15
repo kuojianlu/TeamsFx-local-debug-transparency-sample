@@ -115,9 +115,9 @@
                 ],
                 "appConfigs": {
                     "tabBaseUrl": "https://localhost:53000",
-                    "aadObjectId": "${teamsfx:aadObjectId}",
-                    "aadClientId": "${teamsfx:aadClientId}",
-                    "aadClientSecret": "${teamsfx:aadClientSecret}"
+                    "aadObjectId": "${auto}",
+                    "aadClientId": "${auto}",
+                    "aadClientSecret": "${auto}"
                 }
             }
         },
@@ -126,7 +126,7 @@
             "type": "command",
             "command": "fx-extension.prepare-manifest",
             "args": {
-                "manifesPackagePath": "${teamsfx:manifestPackagePath}"
+                "manifesPackagePath": "${auto}"
             }
         }
     ]
