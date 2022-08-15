@@ -4,19 +4,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Pre Debug Check & Start All",
+            "label": "Start Teams App Locally",
             "dependsOn": [
-                "validate & install prerequisites",
-                "install npm packages",
-                "start local tunnel",
-                "prepare local environment",
-                "upload teams manifest",
-                "start services"
+                "Validate & Install prerequisites",
+                "Install NPM packages",
+                "Start local tunnel",
+                "Prepare Teams App dependencies",
+                "Build & Upload Teams manifest",
+                "Start services"
             ],
             "dependsOrder": "sequence"
         },
         {
-            "label": "validate & install prerequisites",
+            "label": "Validate & Install prerequisites",
             "type": "shell",
             "command": "exit ${input:validate-and-install-prerequisites}",
             "presentation": {
@@ -24,7 +24,7 @@
             }
         },
         {
-            "label": "install npm packages",
+            "label": "Install NPM packages",
             "type": "shell",
             "command": "exit ${input:install-npm-packages}",
             "presentation": {
@@ -32,7 +32,7 @@
             }
         },
         {
-            "label": "start local tunnel",
+            "label": "Start local tunnel",
             "type": "teamsfx",
             "command": "start-local-tunnel",
             "args": {
@@ -47,29 +47,29 @@
             }
         },
         {
-            "label": "prepare local environment",
+            "label": "Prepare Teams App dependencies",
             "type": "shell",
-            "command": "exit ${input:prepare-local-environment}",
+            "command": "exit ${input:prepare-teams-app-dependencies}",
             "presentation": {
                 "reveal": "never"
             }
         },
         {
-            "label": "upload teams manifest",
+            "label": "Build & Upload teams manifest",
             "type": "shell",
-            "command": "exit ${input:upload-teams-manifest}",
+            "command": "exit ${input:build-and-upload-teams-manifest}",
             "presentation": {
                 "reveal": "never"
             }
         },
         {
-            "label": "start services",
+            "label": "Start local services",
             "dependsOn": [
-                "start bot"
+                "Start bot"
             ]
         },
         {
-            "label": "start bot",
+            "label": "Start bot",
             "type": "shell",
             "command": "npm run dev:teamsfx",
             "isBackground": true,
@@ -95,24 +95,24 @@
         {
             "id": "validate-and-install-prerequisites",
             "type": "command",
-            "command": "fx-extension.validate-and-install-prerequisites",
+            "command": "fx-extension.check-prerequisites",
             "args": {
-                "enabledCheckers": [
-                    "nodejs",
-                    "m365Account",
-                    "ngrokBinary",
-                    "portsOccupation"
+                "prerequisites": [
+                    "nodejs", // Validate Node.js
+                    "m365Account", // Validate M365 account
+                    "ngrok", // Install Ngrok
+                    "ports" // Validate available ports
                 ],
-                "portsOccupation": {
-                    "botService": 3978,
-                    "botDebug": 9239
-                }
+                "ports": [
+                    3978, // bot service port
+                    9239 // bot debug port
+                ]
             }
         },
         {
             "id": "install-npm-packages",
             "type": "command",
-            "command": "fx-extension.install-npm-packages",
+            "command": "fx-extension.npm-install",
             "args": {
                 "bot": {
                     "npmInstallArgs": "--no-audit",
@@ -122,27 +122,27 @@
             }
         },
         {
-            "id": "prepare-local-environment",
+            "id": "prepare-teams-app-dependencies",
             "type": "command",
-            "command": "fx-extension.debug-task-prepare-local-environment",
+            "command": "fx-extension.prepare-app-dependencies",
             "args": {
                 "enabledSteps": [
-                    "registerBot",
-                    "buildTeamsManifest",
+                    "registerBot", // Register Bot
+                    "generateEnv", // Generate environment variables for local services
                 ],
-                "bot": {
-                    "port": 3978,
-                    "envSavePath": "${teamsfx:workspaceFolder}/bot/.env.teamsfx.local",
-                    "messagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages"
+                "appConfigs": {
+                    "botId": "${teamsfx:botId}",
+                    "botPassword": "${teamsfx:botPassword}",
+                    "botMessagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
                 }
             }
         },
         {
-            "id": "upload-teams-manifest",
+            "id": "build-and-upload-teams-manifest",
             "type": "command",
-            "command": "fx-extension.debug-task-upload-teams-manifest",
+            "command": "fx-extension.prepare-manifest",
             "args": {
-                "manifestZipPackage": "${teamsfx:workspaceFolder}/build/appPackage/appPackage.local.zip"
+                "manifesPackagePath": "${teamsfx:manifestPackagePath}"
             }
         }
     ]
