@@ -114,7 +114,7 @@
                     "generateEnv", // Generate environment variables for local services
                 ],
                 "appConfigs": {
-                    "tabEndpoint": "https:localhost:53000",
+                    "tabBaseUrl": "https://localhost:53000",
                     "aadObjectId": "${teamsfx:aadObjectId}",
                     "aadClientId": "${teamsfx:aadClientId}",
                     "aadClientSecret": "${teamsfx:aadClientSecret}"
