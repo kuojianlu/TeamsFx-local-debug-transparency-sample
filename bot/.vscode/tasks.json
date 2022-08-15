@@ -142,7 +142,7 @@
             "type": "command",
             "command": "fx-extension.prepare-manifest",
             "args": {
-                "manifesPackagePath": "${auto}"
+                "manifestPackagePath": "${auto}"
             }
         }
     ]
