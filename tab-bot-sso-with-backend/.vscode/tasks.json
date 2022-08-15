@@ -4,20 +4,20 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Pre Debug Check & Start All",
+            "label": "Start Teams App Locally",
             "dependsOn": [
-                "validate & install prerequisites",
-                "install npm packages",
-                "install Azure Functions binding extension",
-                "start local tunnel",
-                "prepare local environment",
-                "upload teams manifest",
-                "start services"
+                "Validate & Install prerequisites",
+                "Install NPM packages",
+                "Install Azure Functions binding extensions",
+                "Start local tunnel",
+                "Prepare Teams App dependencies",
+                "Build & Upload Teams manifest",
+                "Start services"
             ],
             "dependsOrder": "sequence"
         },
         {
-            "label": "validate & install prerequisites",
+            "label": "Validate & Install prerequisites",
             "type": "shell",
             "command": "exit ${input:validate-and-install-prerequisites}",
             "presentation": {
@@ -25,7 +25,7 @@
             }
         },
         {
-            "label": "install npm packages",
+            "label": "Install NPM packages",
             "type": "shell",
             "command": "exit ${input:install-npm-packages}",
             "presentation": {
@@ -33,7 +33,7 @@
             }
         },
         {
-            "label": "install Azure Functions binding extension",
+            "label": "Install Azure Functions binding extensions",
             "type": "shell",
             "command": "dotnet extensions.csproj -o ./bin --ignore-failed-sources",
             "options": {
@@ -47,12 +47,12 @@
             }
         },
         {
-            "label": "start local tunnel",
+            "label": "Start local tunnel",
             "type": "teamsfx",
             "command": "start-local-tunnel",
             "args": {
                 "configFile": "${teamsfx:workspaceFolder}/.fx/configs/ngrok.yml",
-                "binFolder": "${teamsfx:ngrokBinFolder}",
+                "binFolder": "${auto}",
                 "reuse": false
             },
             "isBackground": true,
@@ -62,31 +62,31 @@
             }
         },
         {
-            "label": "prepare local environment",
+            "label": "Prepare Teams App dependencies",
             "type": "shell",
-            "command": "exit ${input:prepare-local-environment}",
+            "command": "exit ${input:prepare-teams-app-dependencies}",
             "presentation": {
                 "reveal": "never"
             }
         },
         {
-            "label": "upload teams manifest",
+            "label": "Build & Upload teams manifest",
             "type": "shell",
-            "command": "exit ${input:upload-teams-manifest}",
+            "command": "exit ${input:build-and-upload-teams-manifest}",
             "presentation": {
                 "reveal": "never"
             }
         },
         {
-            "label": "start services",
+            "label": "Start local services",
             "dependsOn": [
-                "start frontend",
-                "start backend",
-                "start bot"
+                "Start frontend",
+                "Start backend",
+                "Start Bot"
             ]
         },
         {
-            "label": "start frontend",
+            "label": "Start frontend",
             "type": "shell",
             "command": "npm run dev:teamsfx",
             "isBackground": true,
@@ -109,7 +109,7 @@
             }
         },
         {
-            "label": "start backend",
+            "label": "Start backend",
             "type": "shell",
             "command": "npm run dev:teamsfx",
             "isBackground": true,
@@ -137,7 +137,7 @@
             }
         },
         {
-            "label": "start bot",
+            "label": "Start bot",
             "type": "shell",
             "command": "npm run dev:teamsfx",
             "isBackground": true,
@@ -166,30 +166,30 @@
         {
             "id": "validate-and-install-prerequisites",
             "type": "command",
-            "command": "fx-extension.validate-and-install-prerequisites",
+            "command": "fx-extension.check-prerequisites",
             "args": {
-                "enabledCheckers": [
-                    "nodejs",
-                    "m365Account",
-                    "localCertificate",
-                    "azureFunctionsCoreTools",
-                    "ngrokBinary",
-                    "dotnet",
-                    "portsOccupation"
+                "prerequisites": [
+                    "nodejs", // Validate Node.js
+                    "m365Account", // Validate M365 account
+                    "devCert", // Install localhost SSL certificate
+                    "func", // Install Azure Functions Core Tools
+                    "ngrok", // Install Ngrok
+                    "dotnet", // Install .NET
+                    "ports" // Validate available ports
                 ],
-                "portsOccupation": {
-                    "tab": 53000,
-                    "backendService": 9229,
-                    "backendDebug": 7071,
-                    "botService": 3978,
-                    "botDebug": 9239
-                }
+                "ports": [
+                    53000, // tab service port
+                    7071, // backend service port
+                    9229, // backend debug port
+                    3978, // bot service port
+                    9239 // bot debug port
+                ]
             }
         },
         {
             "id": "install-npm-packages",
             "type": "command",
-            "command": "fx-extension.install-npm-packages",
+            "command": "fx-extension.npm-install",
             "args": {
                 "tab": {
                     "npmInstallArgs": "--no-audit",
@@ -209,36 +209,32 @@
             }
         },
         {
-            "id": "prepare-local-environment",
+            "id": "prepare-teams-app-dependencies",
             "type": "command",
-            "command": "fx-extension.debug-task-prepare-local-environment",
+            "command": "fx-extension.prepare-app-dependencies",
             "args": {
                 "enabledSteps": [
-                    "registerBot",
-                    "registerSSOAAD",
-                    "buildTeamsManifest",
+                    "registerBot", // Register Bot
+                    "registerSSOAAD", // Register AAD app for SSO
+                    "generateEnv", // Generate environment variables for local services
                 ],
-                "tab": {
-                    "port": 53000,
-                    "envSavePath": "${teamsfx:workspaceFolder}/tabs/.env.teamsfx.local"
-                },
-                "azureFunctions": {
-                    "port": 9229,
-                    "envSavePath": "${teamsfx:workspaceFolder}/api/.env.teamsfx.local"
-                },
-                "bot": {
-                    "port": 3978,
-                    "envSavePath": "${teamsfx:workspaceFolder}/bot/.env.teamsfx.local",
-                    "messagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages"
+                "appConfigs": {
+                    "tabBaseUrl": "https://localhost:53000",
+                    "aadObjectId": "${auto}",
+                    "aadClientId": "${auto}",
+                    "aadClientSecret": "${auto}",
+                    "botId": "${auto}",
+                    "botPassword": "${auto}",
+                    "botMessagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
                 }
             }
         },
         {
-            "id": "upload-teams-manifest",
+            "id": "build-and-upload-teams-manifest",
             "type": "command",
-            "command": "fx-extension.debug-task-upload-teams-manifest",
+            "command": "fx-extension.prepare-manifest",
             "args": {
-                "manifestZipPackage": "${teamsfx:workspaceFolder}/build/appPackage/appPackage.local.zip"
+                "manifestPackagePath": "${auto}"
             }
         }
     ]
