@@ -38,7 +38,7 @@
             "args": {
                 "configFile": "${teamsfx:workspaceFolder}/.fx/configs/ngrok.yml",
                 "binFolder": "${auto}",
-                "reuse": false
+                "reuse": false // false: auto-terminate when debug stops | true: keep executing when debug stops
             },
             "isBackground": true,
             "problemMatcher": "$teamsfx-local-tunnel-watch",
@@ -96,6 +96,8 @@
             "id": "validate-and-install-prerequisites",
             "type": "command",
             "command": "fx-extension.check-prerequisites",
+            // See https://aka.ms/teamsfx-debug-tasks#validate-and-install-prerequisites for
+            // how to customize following args.
             "args": {
                 "prerequisites": [
                     "nodejs", // Validate Node.js
@@ -114,17 +116,21 @@
             "type": "command",
             "command": "fx-extension.npm-install",
             "args": {
-                "bot": {
-                    "npmInstallArgs": "--no-audit",
-                    "cwd": "${teamsfx:workspaceFolder}/bot",
-                    "forceUpdate": false
-                }
+                "projects": [
+                    {
+                        "cwd": "${teamsfx:workspaceFolder}/bot",
+                        "npmInstallArgs": "--no-audit",
+                    }
+                ],
+                "forceUpdate": false // false: only install when dependency changes | true: always run npm install
             }
         },
         {
             "id": "prepare-teams-app-dependencies",
             "type": "command",
             "command": "fx-extension.prepare-app-dependencies",
+            // See https://aka.ms/teamsfx-debug-tasks#prepare-teams-app-dependencies for
+            // how to customize following args and reuse your own resources.
             "args": {
                 "enabledSteps": [
                     "registerBot", // Register Bot
