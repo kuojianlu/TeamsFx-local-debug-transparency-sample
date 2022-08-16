@@ -82,7 +82,7 @@
             "dependsOn": [
                 "Start frontend",
                 "Start backend",
-                "Start Bot"
+                "Start bot"
             ]
         },
         {
@@ -104,8 +104,7 @@
                     "activeOnStart": true,
                     "beginsPattern": ".*",
                     "endsPattern": "Compiled|Failed"
-                },
-                "severity": "error"
+                }
             }
         },
         {
