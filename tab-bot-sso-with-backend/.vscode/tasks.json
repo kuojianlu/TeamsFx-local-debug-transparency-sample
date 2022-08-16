@@ -78,7 +78,7 @@
             }
         },
         {
-            "label": "Start local services",
+            "label": "Start services",
             "dependsOn": [
                 "Start frontend",
                 "Start backend",
