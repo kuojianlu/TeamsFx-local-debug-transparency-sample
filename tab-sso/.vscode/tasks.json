@@ -5,7 +5,7 @@
             "label": "Start Teams App Locally",
             "dependsOn": [
                 "Validate & Install prerequisites",
-                "Install NPM packages",
+                "Install NPM packages (tab)",
                 "Register SSO AAD",
                 "Build & Upload Teams manifest",
                 "Start frontend"
@@ -15,10 +15,16 @@
         {
             "label": "Validate & Install prerequisites",
             "type": "shell",
-            "command": "teamsfx validate-prerequisites --nodejs --m365Account --devCert --ports 53000",
+            "command": "teamsfx validate-prerequisites",
+            "args": [
+                "--nodejs",
+                "--m365Account",
+                "--devCert",
+                "--ports 53000"
+            ]
         },
         {
-            "label": "Install NPM packages",
+            "label": "Install NPM packages (tab)",
             "type": "shell",
             "command": "teamsfx npm-install",
             "args": [

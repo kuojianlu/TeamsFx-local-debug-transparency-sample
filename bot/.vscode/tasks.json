@@ -5,7 +5,7 @@
             "label": "Start Teams App Locally",
             "dependsOn": [
                 "Validate & Install prerequisites",
-                "Install NPM packages",
+                "Install NPM packages (bot)",
                 "Start local tunnel",
                 "Register bot",
                 "Build & Upload Teams manifest",
@@ -16,12 +16,22 @@
         {
             "label": "Validate & Install prerequisites",
             "type": "shell",
-            "command": "teamsfx check-prerequisites --nodejs --m365Account --ngrok --ports 3978 9239",
+            "command": "teamsfx check-prerequisites",
+            "args": [
+                "--nodejs",
+                "--m365Account",
+                "--ngrok",
+                "--ports 3978 9239"
+            ]
         },
         {
-            "label": "Install NPM packages",
+            "label": "Install NPM packages (bot)",
             "type": "shell",
-            "command": "teamsfx npm-install --project bot --install-args '--no-audit'",
+            "command": "teamsfx npm-install",
+            "args": [
+                "--project bot",
+                "--install-args '--no-audit'"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}",
             }
