@@ -9,7 +9,7 @@
                 "Validate & Install prerequisites",
                 "Install NPM packages",
                 "Start local tunnel",
-                "Register Bot",
+                "Setup Bot",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -64,11 +64,11 @@
             }
         },
         {
-            "label": "Register Bot",
+            "label": "Setup Bot",
             "type": "teamsfx",
-            "command": "register-bot",
-            // See https://aka.ms/teamsfx-debug-tasks#register-bot for
-            // how to customize following args and reuse your own resources.
+            "command": "setup-bot",
+            // See https://aka.ms/teamsfx-debug-tasks#setup-bot for
+            // how to customize following args.
             "args": {
                 "botId": "${auto}",
                 "botPassword": "${auto}",

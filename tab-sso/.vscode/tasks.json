@@ -8,7 +8,8 @@
             "dependsOn": [
                 "Validate & Install prerequisites",
                 "Install NPM packages",
-                "Register SSO AAD",
+                "Setup Tab",
+                "Setup SSO",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -47,13 +48,22 @@
             }
         },
         {
-            "label": "Register SSO AAD",
+            "label": "Setup Tab",
             "type": "teamsfx",
-            "command": "register-sso-aad",
-            // See https://aka.ms/teamsfx-debug-tasks#register-sso-aad for
-            // how to customize following args and reuse your own resources.
+            "command": "setup-tab",
+            // See https://aka.ms/teamsfx-debug-tasks#setup-tab for
+            // how to customize following args.
             "args": {
-                "tabBaseUrl": "https://localhost:53000",
+                "baseUrl": "https://localhost:53000",
+            }
+        },
+        {
+            "label": "Setup SSO",
+            "type": "teamsfx",
+            "command": "setup-sso",
+            // See https://aka.ms/teamsfx-debug-tasks#setup-sso for
+            // how to customize following args.
+            "args": {
                 "aadObjectId": "${auto}",
                 "aadClientId": "${auto}",
                 "aadClientSecret": "${auto}"
