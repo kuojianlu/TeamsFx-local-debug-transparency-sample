@@ -20,7 +20,11 @@
         {
             "label": "Install NPM packages",
             "type": "shell",
-            "command": "cd tabs; npm install",
+            "command": "teamsfx npm-install",
+            "args": [
+                "--project tab",
+                "--install-args '--no-audit'"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}",
             }
@@ -28,12 +32,25 @@
         {
             "label": "Register SSO AAD",
             "type": "shell",
-            "command": "teamsfx register-sso-aad --manifestTemplateFile templates/appPackage/aad.template.json --configFile .fx/configs/config.local.json --stateFile .fx/states/state.local.json", // --manifestFile xxx
+            "command": "teamsfx register-sso-aad",
+            "args": [
+                "--tabBaseUrl https://localhost:53000",
+                // "--aadObjectId xxx",
+                // "--aadClientId xxx",
+                // "--aadClientSecret xxx",
+            ]
+            // Output: envOutput: bot/.env.teamsfx.local; stateOutput: .fx/states/state.local.json
         },
         {
             "label": "Build & Upload Teams manifest",
             "type": "shell",
-            "command": "teamsfx register-app --manifestTemplateFile templates/appPackage/manifest.template.json --configFile .fx/configs/config.local.json --stateFile .fx/states/state.local.json", // --manifestAppPackage xxx
+            "command": "teamsfx register-teams-app",
+            "args": [
+                // "--manifestPackagePath xxx"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
         },
         {
             "label": "Start frontend",

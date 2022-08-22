@@ -10,7 +10,8 @@
                 "Install NPM packages",
                 "Install Azure Functions binding extensions",
                 "Start local tunnel",
-                "Prepare Teams App dependencies",
+                "Register SSO AAD",
+                "Register bot",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -19,17 +20,60 @@
         {
             "label": "Validate & Install prerequisites",
             "type": "shell",
-            "command": "exit ${input:validate-and-install-prerequisites}",
-            "presentation": {
-                "reveal": "never"
-            }
+            "command": "teamsfx check-prerequisites",
+            "args": [
+                "--nodejs",
+                "--m365Account",
+                "--devCert",
+                "--func",
+                "--ngrok",
+                "--dotnet",
+                "--ports 53000 7071 9229 3978 9239",
+            ]
         },
         {
             "label": "Install NPM packages",
+            "dependsOn":[
+                "Install NPM packages (tab)",
+                "Install NPM packages (bot)",
+                "Install NPM packages (api)"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "Install NPM packages (tab)",
             "type": "shell",
-            "command": "exit ${input:install-npm-packages}",
-            "presentation": {
-                "reveal": "silent"
+            "command": "teamsfx npm-install",
+            "args": [
+                "--project tab",
+                "--install-args '--no-audit'"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
+            }
+        },
+        {
+            "label": "Install NPM packages (bot)",
+            "type": "shell",
+            "command": "teamsfx npm-install",
+            "args": [
+                "--project bot",
+                "--install-args '--no-audit'"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
+            }
+        },
+        {
+            "label": "Install NPM packages (api)",
+            "type": "shell",
+            "command": "teamsfx npm-install",
+            "args": [
+                "--project api",
+                "--install-args '--no-audit'"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
             }
         },
         {
@@ -48,33 +92,50 @@
         },
         {
             "label": "Start local tunnel",
-            "type": "teamsfx",
-            "command": "start-local-tunnel",
-            "args": {
-                "configFile": "${teamsfx:workspaceFolder}/.fx/configs/ngrok.yml",
-                "binFolder": "${auto}",
-                "reuse": false // false: auto-terminate when debug stops | true: keep executing when debug stops
-            },
+            "type": "shell",
+            "command": "teamfx start-local-tunnel ",
+            "args": [
+                "--configFile .fx/configs/ngrok.yaml",
+                // "--binFolder xxx"
+            ],
             "isBackground": true,
-            "problemMatcher": "$teamsfx-local-tunnel-watch",
-            "presentation": {
-                "reveal": "silent"
-            }
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
+            "problemMatcher": "$teamsfx-local-tunnel-watch"
         },
         {
-            "label": "Prepare Teams App dependencies",
+            "label": "Register SSO AAD",
             "type": "shell",
-            "command": "exit ${input:prepare-teams-app-dependencies}",
-            "presentation": {
-                "reveal": "never"
-            }
+            "command": "teamsfx register-sso-aad",
+            "args": [
+                "--tabBaseUrl https://localhost:53000",
+                // "--aadObjectId xxx",
+                // "--aadClientId xxx",
+                // "--aadClientSecret xxx",
+            ]
+            // Output: envOutput: bot/.env.teamsfx.local; stateOutput: .fx/states/state.local.json
         },
         {
-            "label": "Build & Upload teams manifest",
+            "label": "Register bot",
             "type": "shell",
-            "command": "exit ${input:build-and-upload-teams-manifest}",
-            "presentation": {
-                "reveal": "never"
+            "command": "teamsfx register-bot",
+            "args": [
+                "--messageEndpoint api/messages",
+                // "--botId xxx",
+                // "--botPassword xxx",
+            ]
+            // Output: envOutput: bot/.env.teamsfx.local; stateOutput: .fx/states/state.local.json
+        },
+        {
+            "label": "Build & Upload Teams manifest",
+            "type": "shell",
+            "command": "teamsfx register-teams-app",
+            "args": [
+                // "--manifestPackagePath xxx"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
             }
         },
         {
@@ -158,86 +219,6 @@
             },
             "presentation": {
                 "reveal": "silent"
-            }
-        }
-    ],
-    "inputs": [
-        {
-            "id": "validate-and-install-prerequisites",
-            "type": "command",
-            "command": "fx-extension.check-prerequisites",
-            // See https://aka.ms/teamsfx-debug-tasks#validate-and-install-prerequisites for
-            // how to customize following args.
-            "args": {
-                "prerequisites": [
-                    "nodejs", // Validate Node.js
-                    "m365Account", // Validate M365 account
-                    "devCert", // Install localhost SSL certificate
-                    "func", // Install Azure Functions Core Tools
-                    "ngrok", // Install Ngrok
-                    "dotnet", // Install .NET
-                    "ports" // Validate available ports
-                ],
-                "ports": [
-                    53000, // tab service port
-                    7071, // backend service port
-                    9229, // backend debug port
-                    3978, // bot service port
-                    9239 // bot debug port
-                ]
-            }
-        },
-        {
-            "id": "install-npm-packages",
-            "type": "command",
-            "command": "fx-extension.npm-install",
-            "args": {
-                "projects": [
-                    {
-                        "cwd": "${teamsfx:workspaceFolder}/tab",
-                        "npmInstallArgs": "--no-audit",
-                    },
-                    {
-                        "cwd": "${teamsfx:workspaceFolder}/bot",
-                        "npmInstallArgs": "--no-audit",
-                    },
-                    {
-                        "cwd": "${teamsfx:workspaceFolder}/api",
-                        "npmInstallArgs": "--no-audit",
-                    }
-                ],
-                "forceUpdate": false // false: only install when dependency changes | true: always run npm install
-            }
-        },
-        {
-            "id": "prepare-teams-app-dependencies",
-            "type": "command",
-            "command": "fx-extension.prepare-app-dependencies",
-            // See https://aka.ms/teamsfx-debug-tasks#prepare-teams-app-dependencies for
-            // how to customize following args and reuse your own resources.
-            "args": {
-                "enabledSteps": [
-                    "registerBot", // Register Bot
-                    "registerSSOAAD", // Register AAD app for SSO
-                    "generateEnv", // Generate environment variables for local services
-                ],
-                "appConfigs": {
-                    "tabBaseUrl": "https://localhost:53000",
-                    "aadObjectId": "${auto}",
-                    "aadClientId": "${auto}",
-                    "aadClientSecret": "${auto}",
-                    "botId": "${auto}",
-                    "botPassword": "${auto}",
-                    "botMessagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
-                }
-            }
-        },
-        {
-            "id": "build-and-upload-teams-manifest",
-            "type": "command",
-            "command": "fx-extension.prepare-manifest",
-            "args": {
-                "manifestPackagePath": "${auto}"
             }
         }
     ]

@@ -21,7 +21,7 @@
         {
             "label": "Install NPM packages",
             "type": "shell",
-            "command": "cd bot; npm install",
+            "command": "teamsfx npm-install --project bot --install-args '--no-audit'",
             "options": {
                 "cwd": "${workspaceFolder}",
             }
@@ -29,7 +29,11 @@
         {
             "label": "Start local tunnel",
             "type": "shell",
-            "command": "teamfx start-local-tunnel --configFile .fx/configs/ngrok.yaml", // --binFolder xxx
+            "command": "teamfx start-local-tunnel ",
+            "args": [
+                "--configFile .fx/configs/ngrok.yaml",
+                // "--binFolder xxx"
+            ],
             "isBackground": true,
             "options": {
                 "cwd": "${workspaceFolder}",
@@ -39,13 +43,21 @@
         {
             "label": "Register bot",
             "type": "shell",
-            "command": "teamsfx register-bot", // --botId xxx --botPassword xxx --messaging-endpoint xxx, 
-                                               // Output: envOutput: bot/.env.teamsfx.local; stateOutput: .fx/states/state.local.json
+            "command": "teamsfx register-bot",
+            "args": [
+                "--messageEndpoint api/messages",
+                // "--botId xxx",
+                // "--botPassword xxx",
+            ]
+            // Output: envOutput: bot/.env.teamsfx.local; stateOutput: .fx/states/state.local.json
         },
         {
             "label": "Build & Upload Teams manifest",
             "type": "shell",
-            "command": "teamsfx register-app --manifestTemplateFile templates/appPackage/manifest.template.json --configFile .fx/configs/config.local.json --stateFile .fx/states/state.local.json", // --manifestAppPackage xxx
+            "command": "teamsfx register-teams-app",
+            "args": [
+                // "--manifestPackagePath xxx"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             }
