@@ -8,7 +8,7 @@
             "dependsOn": [
                 "Validate & Install prerequisites",
                 "Install NPM packages",
-                "Prepare Teams App dependencies",
+                "Register SSO AAD",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -30,9 +30,6 @@
                 "ports": [
                     53000 // tab service port
                 ]
-            },
-            "presentation": {
-                "reveal": "never"
             }
         },
         {
@@ -47,31 +44,19 @@
                     }
                 ],
                 "forceUpdate": false // false: only install when dependency changes | true: always run npm install
-            },
-            "presentation": {
-                "reveal": "silent"
             }
         },
         {
-            "label": "Prepare Teams App dependencies",
+            "label": "Register SSO AAD",
             "type": "teamsfx",
-            "command": "prepare-app-dependencies",
-            // See https://aka.ms/teamsfx-debug-tasks#prepare-teams-app-dependencies for
+            "command": "register-sso-aad",
+            // See https://aka.ms/teamsfx-debug-tasks#register-sso-aad for
             // how to customize following args and reuse your own resources.
             "args": {
-                "enabledSteps": [
-                    "registerSSOAAD", // Register AAD app for SSO
-                    "generateEnv", // Generate environment variables for local services
-                ],
-                "appConfigs": {
-                    "tabBaseUrl": "https://localhost:53000",
-                    "aadObjectId": "${auto}",
-                    "aadClientId": "${auto}",
-                    "aadClientSecret": "${auto}"
-                }
-            },
-            "presentation": {
-                "reveal": "never"
+                "tabBaseUrl": "https://localhost:53000",
+                "aadObjectId": "${auto}",
+                "aadClientId": "${auto}",
+                "aadClientSecret": "${auto}"
             }
         },
         {
@@ -80,9 +65,6 @@
             "command": "prepare-manifest",
             "args": {
                 "manifestPackagePath": "${auto}"
-            },
-            "presentation": {
-                "reveal": "never"
             }
         },
         {
