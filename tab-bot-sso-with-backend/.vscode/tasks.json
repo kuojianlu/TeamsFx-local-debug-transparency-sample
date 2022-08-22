@@ -10,7 +10,8 @@
                 "Install NPM packages",
                 "Install Azure Functions binding extensions",
                 "Start local tunnel",
-                "Prepare Teams App dependencies",
+                "Register Bot",
+                "Register SSO AAD",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -62,9 +63,17 @@
             }
         },
         {
-            "label": "Prepare Teams App dependencies",
+            "label": "Register Bot",
             "type": "shell",
-            "command": "exit ${input:prepare-teams-app-dependencies}",
+            "command": "exit ${input:register-bot}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "Register SSO AAD",
+            "type": "shell",
+            "command": "exit ${input:register-sso-aad}",
             "presentation": {
                 "reveal": "never"
             }
@@ -210,26 +219,28 @@
             }
         },
         {
-            "id": "prepare-teams-app-dependencies",
+            "id": "register-bot",
             "type": "command",
-            "command": "fx-extension.prepare-app-dependencies",
-            // See https://aka.ms/teamsfx-debug-tasks#prepare-teams-app-dependencies for
+            "command": "fx-extension.register-bot",
+            // See https://aka.ms/teamsfx-debug-tasks#register-bot for
             // how to customize following args and reuse your own resources.
             "args": {
-                "enabledSteps": [
-                    "registerBot", // Register Bot
-                    "registerSSOAAD", // Register AAD app for SSO
-                    "generateEnv", // Generate environment variables for local services
-                ],
-                "appConfigs": {
-                    "tabBaseUrl": "https://localhost:53000",
-                    "aadObjectId": "${auto}",
-                    "aadClientId": "${auto}",
-                    "aadClientSecret": "${auto}",
-                    "botId": "${auto}",
-                    "botPassword": "${auto}",
-                    "botMessagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
-                }
+                "botId": "${auto}",
+                "botPassword": "${auto}",
+                "botMessagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
+            }
+        },
+        {
+            "id": "register-sso-aad",
+            "type": "command",
+            "command": "fx-extension.register-sso-aad",
+            // See https://aka.ms/teamsfx-debug-tasks#register-sso-aad for
+            // how to customize following args and reuse your own resources.
+            "args": {
+                "tabBaseUrl": "https://localhost:53000",
+                "aadObjectId": "${auto}",
+                "aadClientId": "${auto}",
+                "aadClientSecret": "${auto}"
             }
         },
         {
