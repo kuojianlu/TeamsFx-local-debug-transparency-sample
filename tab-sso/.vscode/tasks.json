@@ -16,32 +16,71 @@
         },
         {
             "label": "Validate & Install prerequisites",
-            "type": "shell",
-            "command": "exit ${input:validate-and-install-prerequisites}",
+            "type": "teamsfx",
+            "command": "check-prerequisites",
+            // See https://aka.ms/teamsfx-debug-tasks#validate-and-install-prerequisites for
+            // how to customize following args.
+            "args": {
+                "prerequisites": [
+                    "nodejs", // Validate Node.js
+                    "m365Account", // Validate M365 account
+                    "devCert", // Install localhost SSL certificate
+                    "ports" // Validate available ports
+                ],
+                "ports": [
+                    53000 // tab service port
+                ]
+            },
             "presentation": {
                 "reveal": "never"
             }
         },
         {
             "label": "Install NPM packages",
-            "type": "shell",
-            "command": "exit ${input:install-npm-packages}",
+            "type": "teamsfx",
+            "command": "npm-install",
+            "args": {
+                "projects": [
+                    {
+                        "cwd": "${teamsfx:workspaceFolder}/tab",
+                        "npmInstallArgs": "--no-audit",
+                    }
+                ],
+                "forceUpdate": false // false: only install when dependency changes | true: always run npm install
+            },
             "presentation": {
                 "reveal": "silent"
             }
         },
         {
             "label": "Prepare Teams App dependencies",
-            "type": "shell",
-            "command": "exit ${input:prepare-teams-app-dependencies}",
+            "type": "teamsfx",
+            "command": "prepare-app-dependencies",
+            // See https://aka.ms/teamsfx-debug-tasks#prepare-teams-app-dependencies for
+            // how to customize following args and reuse your own resources.
+            "args": {
+                "enabledSteps": [
+                    "registerSSOAAD", // Register AAD app for SSO
+                    "generateEnv", // Generate environment variables for local services
+                ],
+                "appConfigs": {
+                    "tabBaseUrl": "https://localhost:53000",
+                    "aadObjectId": "${auto}",
+                    "aadClientId": "${auto}",
+                    "aadClientSecret": "${auto}"
+                }
+            },
             "presentation": {
                 "reveal": "never"
             }
         },
         {
             "label": "Build & Upload teams manifest",
-            "type": "shell",
-            "command": "exit ${input:build-and-upload-teams-manifest}",
+            "type": "teamsfx",
+            "command": "prepare-manifest",
+            "args": {
+                "manifestPackagePath": "${auto}"
+            },
             "presentation": {
                 "reveal": "never"
             }
@@ -72,67 +111,6 @@
                     "beginsPattern": ".*",
                     "endsPattern": "Compiled|Failed"
                 },
-            }
-        }
-    ],
-    "inputs": [
-        {
-            "id": "validate-and-install-prerequisites",
-            "type": "command",
-            "command": "fx-extension.check-prerequisites",
-            // See https://aka.ms/teamsfx-debug-tasks#validate-and-install-prerequisites for
-            // how to customize following args.
-            "args": {
-                "prerequisites": [
-                    "nodejs", // Validate Node.js
-                    "m365Account", // Validate M365 account
-                    "devCert", // Install localhost SSL certificate
-                    "ports" // Validate available ports
-                ],
-                "ports": [
-                    53000 // tab service port
-                ]
-            }
-        },
-        {
-            "id": "install-npm-packages",
-            "type": "command",
-            "command": "fx-extension.npm-install",
-            "args": {
-                "projects": [
-                    {
-                        "cwd": "${teamsfx:workspaceFolder}/tab",
-                        "npmInstallArgs": "--no-audit",
-                    }
-                ],
-                "forceUpdate": false // false: only install when dependency changes | true: always run npm install
-            }
-        },
-        {
-            "id": "prepare-teams-app-dependencies",
-            "type": "command",
-            "command": "fx-extension.prepare-app-dependencies",
-            // See https://aka.ms/teamsfx-debug-tasks#prepare-teams-app-dependencies for
-            // how to customize following args and reuse your own resources.
-            "args": {
-                "enabledSteps": [
-                    "registerSSOAAD", // Register AAD app for SSO
-                    "generateEnv", // Generate environment variables for local services
-                ],
-                "appConfigs": {
-                    "tabBaseUrl": "https://localhost:53000",
-                    "aadObjectId": "${auto}",
-                    "aadClientId": "${auto}",
-                    "aadClientSecret": "${auto}"
-                }
-            }
-        },
-        {
-            "id": "build-and-upload-teams-manifest",
-            "type": "command",
-            "command": "fx-extension.prepare-manifest",
-            "args": {
-                "manifestPackagePath": "${auto}"
             }
         }
     ]
