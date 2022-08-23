@@ -7,7 +7,7 @@
                 "Validate & Install prerequisites",
                 "Install NPM packages (bot)",
                 "Start local tunnel",
-                "Register Bot",
+                "Setup Bot",
                 "Build & Upload Teams manifest",
                 "Start bot"
             ],
@@ -51,9 +51,9 @@
             "problemMatcher": "$teamsfx-local-tunnel-watch"
         },
         {
-            "label": "Register Bot",
+            "label": "Setup Bot",
             "type": "shell",
-            "command": "teamsfx register-bot",
+            "command": "teamsfx setup-bot",
             "args": [
                 "--messageEndpoint api/messages",
                 // "--botId xxx",

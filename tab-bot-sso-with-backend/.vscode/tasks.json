@@ -10,8 +10,9 @@
                 "Install NPM packages",
                 "Install Azure Functions binding extensions",
                 "Start local tunnel",
-                "Register Bot",
-                "Register SSO AAD",
+                "Setup Tab",
+                "Setup Bot",
+                "Setup SSO",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -105,9 +106,18 @@
             "problemMatcher": "$teamsfx-local-tunnel-watch"
         },
         {
-            "label": "Register Bot",
+            "label": "Setup Tab",
             "type": "shell",
-            "command": "teamsfx register-bot",
+            "command": "teamsfx setup-tab",
+            "args": [
+                "--tabBaseUrl https://localhost:53000",
+            ]
+            // Output: envOutput: bot/.env.teamsfx.local; stateOutput: .fx/states/state.local.json
+        },
+        {
+            "label": "Setup Bot",
+            "type": "shell",
+            "command": "teamsfx setup-bot",
             "args": [
                 "--messageEndpoint api/messages",
                 // "--botId xxx",
@@ -116,11 +126,10 @@
             // Output: envOutput: bot/.env.teamsfx.local; stateOutput: .fx/states/state.local.json
         },
         {
-            "label": "Register SSO AAD",
+            "label": "Setup SSO",
             "type": "shell",
-            "command": "teamsfx register-sso-aad",
+            "command": "teamsfx setup-sso",
             "args": [
-                "--tabBaseUrl https://localhost:53000",
                 // "--aadObjectId xxx",
                 // "--aadClientId xxx",
                 // "--aadClientSecret xxx",

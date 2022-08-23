@@ -6,7 +6,8 @@
             "dependsOn": [
                 "Validate & Install prerequisites",
                 "Install NPM packages (tab)",
-                "Register SSO AAD",
+                "Setup Tab",
+                "Setup SSO",
                 "Build & Upload Teams manifest",
                 "Start frontend"
             ],
@@ -36,11 +37,19 @@
             }
         },
         {
-            "label": "Register SSO AAD",
+            "label": "Setup Tab",
             "type": "shell",
-            "command": "teamsfx register-sso-aad",
+            "command": "teamsfx setup-tab",
             "args": [
                 "--tabBaseUrl https://localhost:53000",
+            ]
+            // Output: envOutput: bot/.env.teamsfx.local; stateOutput: .fx/states/state.local.json
+        },
+        {
+            "label": "Setup SSO",
+            "type": "shell",
+            "command": "teamsfx setup-sso",
+            "args": [
                 // "--aadObjectId xxx",
                 // "--aadClientId xxx",
                 // "--aadClientSecret xxx",
