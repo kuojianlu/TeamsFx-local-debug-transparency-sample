@@ -10,8 +10,9 @@
                 "Install NPM packages",
                 "Install Azure Functions binding extensions",
                 "Start local tunnel",
-                "Register Bot",
-                "Register SSO AAD",
+                "Setup Tab",
+                "Setup Bot",
+                "Setup SSO",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -63,17 +64,25 @@
             }
         },
         {
-            "label": "Register Bot",
+            "label": "Setup Tab",
             "type": "shell",
-            "command": "exit ${input:register-bot}",
+            "command": "exit ${input:setup-tab}",
             "presentation": {
                 "reveal": "never"
             }
         },
         {
-            "label": "Register SSO AAD",
+            "label": "Setup Bot",
             "type": "shell",
-            "command": "exit ${input:register-sso-aad}",
+            "command": "exit ${input:setup-bot}",
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "Setup SSO",
+            "type": "shell",
+            "command": "exit ${input:setup-sso}",
             "presentation": {
                 "reveal": "never"
             }
@@ -219,10 +228,20 @@
             }
         },
         {
-            "id": "register-bot",
+            "id": "setup-tab",
             "type": "command",
-            "command": "fx-extension.register-bot",
-            // See https://aka.ms/teamsfx-debug-tasks#register-bot for
+            "command": "fx-extension.setup-tab",
+            // See https://aka.ms/teamsfx-debug-tasks#setup-tab for
+            // how to customize following args and reuse your own resources.
+            "args": {
+                "tabBaseUrl": "https://localhost:53000"
+            }
+        },
+        {
+            "id": "setup-bot",
+            "type": "command",
+            "command": "fx-extension.setup-bot",
+            // See https://aka.ms/teamsfx-debug-tasks#setup-bot for
             // how to customize following args and reuse your own resources.
             "args": {
                 "botId": "${auto}",
@@ -231,10 +250,10 @@
             }
         },
         {
-            "id": "register-sso-aad",
+            "id": "setup-sso",
             "type": "command",
-            "command": "fx-extension.register-sso-aad",
-            // See https://aka.ms/teamsfx-debug-tasks#register-sso-aad for
+            "command": "fx-extension.setup-sso",
+            // See https://aka.ms/teamsfx-debug-tasks#setup-sso for
             // how to customize following args and reuse your own resources.
             "args": {
                 "tabBaseUrl": "https://localhost:53000",
