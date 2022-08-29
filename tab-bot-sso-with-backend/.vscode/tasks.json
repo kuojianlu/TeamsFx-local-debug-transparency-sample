@@ -122,7 +122,8 @@
             "args": {
                 "aadObjectId": "${auto}",
                 "aadClientId": "${auto}",
-                "aadClientSecret": "${auto}"
+                "aadClientSecret": "${auto}",
+                "accessAsUserScopeId": "${auto}"
             }
         },
         {
