@@ -8,8 +8,8 @@
             "dependsOn": [
                 "Validate & Install prerequisites",
                 "Install NPM packages",
-                "Setup Tab",
-                "Setup SSO",
+                "Set up Tab",
+                "Set up SSO",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -18,15 +18,13 @@
         {
             "label": "Validate & Install prerequisites",
             "type": "teamsfx",
-            "command": "check-prerequisites",
-            // See https://aka.ms/teamsfx-debug-tasks#validate-and-install-prerequisites for
-            // how to customize following args.
+            "command": "debug-check-prerequisites",
             "args": {
                 "prerequisites": [
-                    "nodejs", // Validate Node.js
-                    "m365Account", // Validate M365 account
-                    "devCert", // Install localhost SSL certificate
-                    "ports" // Validate available ports
+                    "nodejs",
+                    "m365Account",
+                    "devCert",
+                    "ports"
                 ],
                 "ports": [
                     53000 // tab service port
@@ -36,46 +34,42 @@
         {
             "label": "Install NPM packages",
             "type": "teamsfx",
-            "command": "npm-install",
+            "command": "debug-npm-install",
             "args": {
                 "projects": [
                     {
                         "cwd": "${teamsfx:workspaceFolder}/tab",
-                        "npmInstallArgs": "--no-audit",
+                        "npmInstallArgs": ["--no-audit"],
                     }
                 ],
-                "forceUpdate": false // false: only install when dependency changes | true: always run npm install
+                "forceUpdate": false
             }
         },
         {
-            "label": "Setup Tab",
+            "label": "Set up Tab",
             "type": "teamsfx",
-            "command": "setup-tab",
-            // See https://aka.ms/teamsfx-debug-tasks#setup-tab for
-            // how to customize following args.
+            "command": "debug-set-up-tab",
             "args": {
                 "baseUrl": "https://localhost:53000",
             }
         },
         {
-            "label": "Setup SSO",
+            "label": "Set up SSO",
             "type": "teamsfx",
-            "command": "setup-sso",
-            // See https://aka.ms/teamsfx-debug-tasks#setup-sso for
-            // how to customize following args.
+            "command": "debug-set-up-sso",
             "args": {
-                "aadObjectId": "${auto}",
-                "aadClientId": "${auto}",
-                "aadClientSecret": "${auto}",
-                "accessAsUserScopeId": "${auto}"
+                "objectId": "",
+                "clientId": "",
+                "clientSecret": "",
+                "accessAsUserScopeId": ""
             }
         },
         {
             "label": "Build & Upload teams manifest",
             "type": "teamsfx",
-            "command": "prepare-manifest",
+            "command": "debug-prepare-manifest",
             "args": {
-                "manifestPackagePath": "${auto}"
+                "manifestPackagePath": ""
             }
         },
         {

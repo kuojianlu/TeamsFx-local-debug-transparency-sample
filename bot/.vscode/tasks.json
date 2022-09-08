@@ -9,7 +9,7 @@
                 "Validate & Install prerequisites",
                 "Install NPM packages",
                 "Start local tunnel",
-                "Setup Bot",
+                "Set up Bot",
                 "Build & Upload Teams manifest",
                 "Start services"
             ],
@@ -18,15 +18,13 @@
         {
             "label": "Validate & Install prerequisites",
             "type": "teamsfx",
-            "command": "check-prerequisites",
-            // See https://aka.ms/teamsfx-debug-tasks#validate-and-install-prerequisites for
-            // how to customize following args.
+            "command": "debug-check-prerequisites",
             "args": {
                 "prerequisites": [
-                    "nodejs", // Validate Node.js
-                    "m365Account", // Validate M365 account
-                    "ngrok", // Install Ngrok
-                    "ports" // Validate available ports
+                    "nodejs",
+                    "m365Account",
+                    "ngrok",
+                    "ports"
                 ],
                 "ports": [
                     3978, // bot service port
@@ -37,50 +35,48 @@
         {
             "label": "Install NPM packages",
             "type": "teamsfx",
-            "command": "npm-install",
+            "command": "debug-npm-install",
             "args": {
                 "projects": [
                     {
                         "cwd": "${teamsfx:workspaceFolder}/bot",
-                        "npmInstallArgs": "--no-audit",
+                        "npmInstallArgs": ["--no-audit"],
                     }
                 ],
-                "forceUpdate": false // false: only install when dependency changes | true: always run npm install
+                "forceUpdate": false
             }
         },
         {
             "label": "Start local tunnel",
             "type": "teamsfx",
-            "command": "start-local-tunnel",
+            "command": "debug-start-local-tunnel",
             "args": {
                 "configFile": "${teamsfx:workspaceFolder}/.fx/configs/ngrok.yml",
-                "binFolder": "${auto}",
-                "reuse": false // false: auto-terminate when debug stops | true: keep executing when debug stops
+                "binFolder": "${teamsfx:ngrokBinFolder}",
+                // "reuse": false // false: auto-terminate when debug stops | true: keep executing when debug stops
             },
             "isBackground": true,
-            "problemMatcher": "$teamsfx-local-tunnel-watch",
+            "problemMatcher": "$teamsfx-ngrok-watch",
             "presentation": {
                 "reveal": "silent"
             }
         },
         {
-            "label": "Setup Bot",
+            "label": "Set up Bot",
             "type": "teamsfx",
-            "command": "setup-bot",
-            // See https://aka.ms/teamsfx-debug-tasks#setup-bot for
-            // how to customize following args.
+            "command": "debug-set-up-bot",
             "args": {
-                "botId": "${auto}",
-                "botPassword": "${auto}",
+                "botId": "",
+                "botPassword": "",
                 "botMessagingEndpoint": "${teamsfx:botTunnelEndpoint}/api/messages",
             }
         },
         {
             "label": "Build & Upload teams manifest",
             "type": "teamsfx",
-            "command": "prepare-manifest",
+            "command": "debug-prepare-manifest",
             "args": {
-                "manifestPackagePath": "${auto}"
+                "manifestPackagePath": ""
             }
         },
         {
