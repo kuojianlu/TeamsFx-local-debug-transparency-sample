@@ -2,17 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Pre Debug Check & Start All",
+            "label": "Launch and Upload Teams App",
             "dependsOn": [
-                "gulp ngrok-serve",
-                "upload teams manifest",
+                "Launch Local Server",
+                "Upload App Manifest",
             ],
             "dependsOrder": "sequence"
         },
         {
-            "label": "gulp ngrok-serve",
+            "label": "Launch Local Server",
             "type": "shell",
-            "command": "gulp ngrok-serve --debug",
+            "command": "npm run teamsfx:debug",
             "isBackground": true,
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -32,22 +32,12 @@
             }
         },
         {
-            "label": "upload teams manifest",
+            "label": "Upload App Manifest",
             "type": "shell",
-            "command": "exit ${input:upload-teams-manifest}",
-            "presentation": {
-                "reveal": "never"
+            "command": "npm run teamsfx:upload-manifest",
+            "options": {
+                "cwd": "${workspaceFolder}"
             }
         },
-    ],
-    "inputs": [
-        {
-            "id": "upload-teams-manifest",
-            "type": "command",
-            "command": "fx-extension.debug-task-upload-teams-manifest",
-            "args": {
-                "manifestZipPackage": "${teamsfx:workspaceFolder}/package/tab.zip"
-            }
-        }
     ]
 }

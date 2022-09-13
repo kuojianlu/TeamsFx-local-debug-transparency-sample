@@ -1,5 +1,7 @@
 import * as Express from "express";
+import * as fs from "fs";
 import * as http from "http";
+import * as https from "https";
 import * as path from "path";
 import * as morgan from "morgan";
 import { MsTeamsApiRouter, MsTeamsPageRouter } from "express-msteams-host";
@@ -63,6 +65,17 @@ express.use("/", Express.static(path.join(__dirname, "web/"), {
 express.set("port", port);
 
 // Start the webserver
-http.createServer(express).listen(port, () => {
-    log(`Server running on ${port}`);
-});
+if (process.env.HTTPS_SSL_CERT_PATH && process.env.HTTPS_SSL_KEY_PATH) {
+    // HTTPS
+    const cert  = fs.readFileSync(process.env.HTTPS_SSL_CERT_PATH, 'utf8');
+    const key = fs.readFileSync(process.env.HTTPS_SSL_KEY_PATH, 'utf8');
+    const credentials = {cert: cert, key: key};
+    https.createServer(credentials, express).listen(port, () => {
+        log(`HTTPS Server running on ${port}`);
+    });
+} else {
+    // HTTP
+    http.createServer(express).listen(port, () => {
+        log(`Server running on ${port}`);
+    });
+}
