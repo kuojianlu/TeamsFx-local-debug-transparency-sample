@@ -7,7 +7,10 @@
     "build": "gulp build",
     "manifest": "gulp manifest",
     "debug": "gulp serve --debug",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "teamsfx:dev-cert": "teamsfx dev-cert --trust",
+    "teamsfx:debug": "gulp serve --env=.env.teamsfx --debug",
+    "teamsfx:upload-manifest": "teamsfx manifest --upload --package-path package/yoteamstab.zip"
   },
   "dependencies": {
     "@fluentui/react-northstar": "~0.62.0",
@@ -27,6 +30,7 @@
     "msteams-react-base-component": "^4.0.1"
   },
   "devDependencies": {
+    "@microsoft/teamsfx-cli": "^1.0.5",
     "@types/debug": "4.1.7",
     "@types/express": "^4.17.13",
     "@types/express-session": "~1.17.4",
