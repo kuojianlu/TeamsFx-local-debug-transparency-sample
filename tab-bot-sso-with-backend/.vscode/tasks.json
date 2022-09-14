@@ -116,7 +116,7 @@
             }
         },
         {
-            "label": "Build & Upload teams manifest",
+            "label": "Build & Upload Teams manifest",
             "type": "teamsfx",
             "command": "debug-prepare-manifest",
             "args": {
