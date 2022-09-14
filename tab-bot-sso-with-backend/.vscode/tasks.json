@@ -84,7 +84,7 @@
                 // "reuse": false // false: auto-terminate when debug stops | true: keep executing when debug stops
             },
             "isBackground": true,
-            "problemMatcher": "$teamsfx-ngrok-watch",
+            "problemMatcher": "$teamsfx-local-tunnel-watch",
         },
         {
             "label": "Set up Tab",
