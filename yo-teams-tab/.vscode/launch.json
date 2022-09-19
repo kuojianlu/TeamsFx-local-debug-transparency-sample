@@ -38,8 +38,8 @@
             ]
         },
         {
-            "name": "Sideload in Teams (Chrome)",
-            "type": "pwa-chrome",
+            "name": "Sideload in Teams (Edge)",
+            "type": "pwa-msedge",
             "request": "launch",
             "url": "https://teams.microsoft.com/l/app/ca1990f0-17c6-11ed-ae1f-17e65e2e6feb?installAppPackage=true&webjoin=true",
             "outFiles": [
@@ -50,8 +50,23 @@
                 "group": "_teamsfx",
                 "order": 1
             },
-            // "preLaunchTask": "Launch and Upload Teams App"
+            "preLaunchTask": "Launch and Upload Teams App"
         },
+        {
+            "name": "Sideload in Teams (Chrome)",
+            "type": "pwa-chrome",
+            "request": "launch",
+            "url": "https://teams.microsoft.com/l/app/ca1990f0-17c6-11ed-ae1f-17e65e2e6feb?installAppPackage=true&webjoin=true",
+            "outFiles": [
+                "${workspaceFolder}/dist/web/**/*.js",
+                "!**/node_modules/**"
+            ],
+            "presentation": {
+                "group": "_teamsfx",
+                "order": 2
+            },
+            "preLaunchTask": "Launch and Upload Teams App"
+        }
     ],
     "compounds": [
         {
@@ -64,6 +79,7 @@
                 "group": "all",
                 "order": 1
             },
+            "preLaunchTask": "Launch Local Server",
             "stopAll": true
         },
         {
@@ -76,6 +92,7 @@
                 "group": "all",
                 "order": 2
             },
+            "preLaunchTask": "Launch Local Server",
             "stopAll": true
         }
     ]

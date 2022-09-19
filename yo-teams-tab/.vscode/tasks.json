@@ -12,7 +12,7 @@
         {
             "label": "Launch Local Server",
             "type": "shell",
-            "command": "npm run teamsfx:debug",
+            "command": "npm run debug",
             "isBackground": true,
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -33,10 +33,10 @@
         },
         {
             "label": "Upload App Manifest",
-            "type": "shell",
-            "command": "npm run teamsfx:upload-manifest",
-            "options": {
-                "cwd": "${workspaceFolder}"
+            "type": "teamsfx",
+            "command": "debug-prepare-manifest",
+            "args": {
+                "manifestPackagePath": "${workspaceFolder}/package/yoteamstab.zip"
             }
         },
     ]
